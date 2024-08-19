@@ -1,37 +1,53 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { View, Text, StyleSheet } from 'react-native'
+import React from 'react'
+import { Tabs } from 'expo-router'
+import { BookMarkIcon, CompassIcon, DasboardIcon, ProfileIcon, SearchIcon } from '@/components/Icons'
+import Color from '@/constants/Color'
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+export default function _layout() {
+    return (
+        <Tabs screenOptions={{
+            tabBarStyle: {
+                backgroundColor: Color.bgColor,
+                borderTopWidth: 0,
+                padding: 0,
+            },
+            tabBarShowLabel: false,
+            tabBarActiveTintColor: Color.black,
+            tabBarInactiveTintColor: Color.grey
+        }} >
+            <Tabs.Screen name='index' options={{
+                tabBarIcon: ({ color }) => <CompassIcon color={color} />
+            }} />
+            <Tabs.Screen name='category' options={{
+                tabBarIcon: ({ color }) => <DasboardIcon color={color} />
+            }} />
+            <Tabs.Screen name='search' options={{
+                tabBarIcon: ({ color }) => (
+                    <View style={styles.bgIcon}>
+                        <SearchIcon color={Color.white} size={25} />
+                    </View>
+                ),
+            }} />
+            <Tabs.Screen name='bookmarks' options={{
+                tabBarIcon: ({ color }) => <BookMarkIcon color={color} />
+            }} />
+            <Tabs.Screen name='profile' options={{
+                tabBarIcon: ({ color }) => <ProfileIcon color={color} />
+            }} />
+        </Tabs>
+    )
 }
+
+
+const styles = StyleSheet.create({
+    bgIcon: {
+        backgroundColor: Color.primaryColor,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderRadius: 10,
+        height: 50,
+        justifyContent: "center",
+        alignItems: "center",
+    }
+})
