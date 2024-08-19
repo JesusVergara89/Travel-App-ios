@@ -2,14 +2,21 @@ import Iconheader from '@/components/Iconheader';
 import Profileperson from '@/components/Profileperson';
 import Color from '@/constants/Color';
 import { Stack } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Pressable, TextInput } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { OptionIcon, SearchIcon } from '@/components/Icons';
+import CategoryButtons from '@/components/CategoryButtons';
 
 const Page = () => {
 
+    const [category, setCategory] = useState('All')
+
     const headerHeight = useHeaderHeight()
+
+    const onCatChanged = (category: string) => {
+        setCategory(category)
+    }
 
     return (
         <>
@@ -42,6 +49,8 @@ const Page = () => {
                         <OptionIcon size={28} color={Color.white} />
                     </Pressable>
                 </View>
+
+                <CategoryButtons onCagtegoryChanged={onCatChanged}/>
 
             </View>
         </>
