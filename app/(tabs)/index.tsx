@@ -1,3 +1,4 @@
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import Iconheader from '@/components/Iconheader';
 import Profileperson from '@/components/Profileperson';
 import Color from '@/constants/Color';
@@ -7,6 +8,10 @@ import { StyleSheet, View, Text, Pressable, TextInput } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { OptionIcon, SearchIcon } from '@/components/Icons';
 import CategoryButtons from '@/components/CategoryButtons';
+import Listings from '@/components/Listings';
+import listingData from '@/data/destinations.json'
+import GroupListings from '@/components/GroupListings';
+import groupData from '@/data/groups.json'
 
 const Page = () => {
 
@@ -20,39 +25,46 @@ const Page = () => {
 
     return (
         <>
-            <Stack.Screen
-                options={{
-                    headerTransparent: true,
-                    headerTitle: "",
-                    headerLeft: () => (
-                        <Pressable style={styles.pressableImage} onPress={() => { }}>
-                            <Profileperson />
-                        </Pressable>
-                    ),
-                    headerRight: () => (
-                        <Pressable style={styles.pressableHeaderIcon} onPress={() => { }}>
-                            <Iconheader />
-                        </Pressable>
-                    )
-                }}
-            />
-            <View style={[styles.container, { paddingTop: headerHeight }]}>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <Stack.Screen
+                    options={{
+                        headerTransparent: true,
+                        headerTitle: "",
+                        headerLeft: () => (
+                            <Pressable style={styles.pressableImage} onPress={() => { }}>
+                                <Profileperson />
+                            </Pressable>
+                        ),
+                        headerRight: () => (
+                            <Pressable style={styles.pressableHeaderIcon} onPress={() => { }}>
+                                <Iconheader />
+                            </Pressable>
+                        )
+                    }}
+                />
+                <View style={[styles.container, { paddingTop: headerHeight }]}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <Text style={styles.headingText} >Explore The Beautiful World!</Text>
 
-                <Text style={styles.headingText} >Explore The Beautiful World!</Text>
+                        <View style={styles.searchSectionWrapper}>
+                            <View style={styles.searchBar} >
+                                <SearchIcon size={18} />
+                                <TextInput placeholder='Search...' />
+                            </View>
+                            <Pressable style={styles.filterBtn} onPress={() => { }}>
+                                <OptionIcon size={28} color={Color.white} />
+                            </Pressable>
+                        </View>
 
-                <View style={styles.searchSectionWrapper}>
-                    <View style={styles.searchBar} >
-                        <SearchIcon size={18} />
-                        <TextInput placeholder='Search...' />
-                    </View>
-                    <Pressable style={styles.filterBtn} onPress={() => { }}>
-                        <OptionIcon size={28} color={Color.white} />
-                    </Pressable>
+                        <CategoryButtons onCagtegoryChanged={onCatChanged} />
+
+                        <Listings listing={listingData} category={category} />
+
+                        <GroupListings listing={groupData} />
+                    </ScrollView>
                 </View>
 
-                <CategoryButtons onCagtegoryChanged={onCatChanged}/>
-
-            </View>
+            </GestureHandlerRootView>
         </>
     );
 }
