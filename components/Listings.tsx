@@ -12,10 +12,10 @@ const Listings = ({ listing, category }: Props) => {
     const [loading, setLoading] = useState(false)
     useEffect(() => {
         console.log('update')
-        setLoading(true)
-        setTimeout(() => {
-            setLoading(false)
-        }, 200)
+        //setLoading(true)
+        //setTimeout(() => {
+          //  setLoading(false)
+        //}, 200)
     }, [category])
     return (
         <View>

@@ -5,6 +5,8 @@ import listingData from '@/data/destinations.json'
 import { ListingTypes } from '@/types/listingTypes';
 import { ArroeLeftIcon, BookMarkIcon, ClockIcon, GroupPersonIcon, MapIcon, StarIcon } from '@/components/Icons';
 import Color from '@/constants/Color';
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
 
 const { width } = Dimensions.get("window")
 const height = 350
@@ -24,6 +26,29 @@ const ListingDetails = () => {
             </View>
         );
     }
+
+    const scrollRef = useAnimatedRef<Animated.ScrollView>();
+    const scrollOffSet = useScrollViewOffset(scrollRef)
+    const imageAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    translateY: interpolate(
+                        scrollOffSet.value,
+                        [-height, 0, height],
+                        [-height / 2, 0, height * 0.75]
+                    ),
+                },
+                {
+                    scale: interpolate(
+                        scrollOffSet.value,
+                        [-height, 0, height],
+                        [2, 1, 1]
+                    )
+                }
+            ]
+        }
+    })
 
     return (
         <>
@@ -47,54 +72,63 @@ const ListingDetails = () => {
                     )
                 }}
             />
-            <View style={styles.container}>
-                <Image source={{ uri: listing.image }} style={styles.image} />
-                <View style={styles.contentWrapper}>
-                    <Text style={styles.listingName}>{listing.name}</Text>
-                    <View style={styles.listingLocationWrapper}>
-                        <MapIcon size={18} color={Color.primaryColor} />
-                        <Text style={styles.listingLocationText}>{listing.location}</Text>
-                    </View>
-                    <View style={styles.innerContainer}>
-                        <View style={styles.mostInnerContainer}>
-                            <View style={styles.iconMetrics}>
-                                <ClockIcon size={18} color={Color.primaryColor} />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <View style={styles.container}>
+                    <Animated.ScrollView
+                        ref={scrollRef}
+                        contentContainerStyle={{
+                            paddingBottom: 150
+                        }}
+                    >
+                        <Animated.Image source={{ uri: listing.image }} style={[styles.image, imageAnimatedStyle]} />
+                        <View style={styles.contentWrapper}>
+                            <Text style={styles.listingName}>{listing.name}</Text>
+                            <View style={styles.listingLocationWrapper}>
+                                <MapIcon size={18} color={Color.primaryColor} />
+                                <Text style={styles.listingLocationText}>{listing.location}</Text>
                             </View>
-                            <View>
-                                <Text style={styles.listingDurationText}>Duration</Text>
-                                <Text style={styles.listingDuration}>{listing.duration} Days</Text>
+                            <View style={styles.innerContainer}>
+                                <View style={styles.mostInnerContainer}>
+                                    <View style={styles.iconMetrics}>
+                                        <ClockIcon size={18} color={Color.primaryColor} />
+                                    </View>
+                                    <View>
+                                        <Text style={styles.listingDurationText}>Duration</Text>
+                                        <Text style={styles.listingDuration}>{listing.duration} Days</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.mostInnerContainer}>
+                                    <View style={styles.iconMetrics}>
+                                        <GroupPersonIcon size={18} color={Color.primaryColor} />
+                                    </View>
+                                    <View>
+                                        <Text style={styles.listingDurationText}>Person</Text>
+                                        <Text style={styles.listingDuration}>{listing.duration}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.mostInnerContainer}>
+                                    <View style={styles.iconMetrics}>
+                                        <StarIcon size={18} color={Color.primaryColor} />
+                                    </View>
+                                    <View>
+                                        <Text style={styles.listingDurationText}>Duration</Text>
+                                        <Text style={styles.listingDuration}>{listing.rating}</Text>
+                                    </View>
+                                </View>
                             </View>
+                            <Text style={styles.listingTextDescription}>{listing.description}</Text>
                         </View>
-                        <View style={styles.mostInnerContainer}>
-                            <View style={styles.iconMetrics}>
-                                <GroupPersonIcon size={18} color={Color.primaryColor} />
-                            </View>
-                            <View>
-                                <Text style={styles.listingDurationText}>Person</Text>
-                                <Text style={styles.listingDuration}>{listing.duration}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.mostInnerContainer}>
-                            <View style={styles.iconMetrics}>
-                                <StarIcon size={18} color={Color.primaryColor} />
-                            </View>
-                            <View>
-                                <Text style={styles.listingDurationText}>Duration</Text>
-                                <Text style={styles.listingDuration}>{listing.rating}</Text>
-                            </View>
-                        </View>
-                    </View>
-                    <Text style={styles.listingTextDescription}>{listing.description}</Text>
+                    </Animated.ScrollView>
                 </View>
-            </View>
-            <View style={styles.footer}>
-                <Pressable style={styles.footerBtn} onPress={() => { }}>
-                    <Text style={styles.footerBtnText} >Book Now</Text>
-                </Pressable>
-                <Pressable style={styles.footerBtn_} onPress={() => { }}>
-                    <Text style={styles.footerBtnText} >${listing.price}</Text>
-                </Pressable>
-            </View>
+                <View style={styles.footer}>
+                    <Pressable style={styles.footerBtn} onPress={() => { }}>
+                        <Text style={styles.footerBtnText} >Book Now</Text>
+                    </Pressable>
+                    <Pressable style={styles.footerBtn_} onPress={() => { }}>
+                        <Text style={styles.footerBtnText} >${listing.price}</Text>
+                    </Pressable>
+                </View>
+            </GestureHandlerRootView>
         </>
     );
 }
@@ -119,7 +153,8 @@ const styles = StyleSheet.create({
         backgroundColor: Color.white,
     },
     contentWrapper: {
-        padding: 20
+        padding: 20,
+        backgroundColor: Color.white,
     },
     listingName: {
         fontSize: 24,
@@ -175,10 +210,10 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingBottom: 30,
         width: width,
-        columnGap: 10
+        columnGap: 20
     },
     footerBtn: {
-        flex: 1,
+        flex: 2,
         backgroundColor: Color.primaryColor,
         padding: 20,
         borderRadius: 10,
