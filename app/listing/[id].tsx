@@ -6,7 +6,7 @@ import { ListingTypes } from '@/types/listingTypes';
 import { ArroeLeftIcon, BookMarkIcon, ClockIcon, GroupPersonIcon, MapIcon, StarIcon } from '@/components/Icons';
 import Color from '@/constants/Color';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
-import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
+import Animated, { SlideInDown, interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated';
 
 const { width } = Dimensions.get("window")
 const height = 350
@@ -120,14 +120,14 @@ const ListingDetails = () => {
                         </View>
                     </Animated.ScrollView>
                 </View>
-                <View style={styles.footer}>
+                <Animated.View style={styles.footer} entering={SlideInDown.delay(350)}>
                     <Pressable style={styles.footerBtn} onPress={() => { }}>
                         <Text style={styles.footerBtnText} >Book Now</Text>
                     </Pressable>
                     <Pressable style={styles.footerBtn_} onPress={() => { }}>
                         <Text style={styles.footerBtnText} >${listing.price}</Text>
                     </Pressable>
-                </View>
+                </Animated.View>
             </GestureHandlerRootView>
         </>
     );
